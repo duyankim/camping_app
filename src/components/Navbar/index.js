@@ -45,23 +45,26 @@ const Navbar = ({ toggle }) => {
           <NavMenu>
             <NavItem>
               <NavLinks
-                to="/about"
-                smooth={true}
-                duration={500}
-                spy={true}
-                exact="true"
-                offset={-60}
-                activeClass={"active"}
+              // to="/about"
+              // smooth={true}
+              // duration={500}
+              // spy={true}
+              // exact="true"
+              // offset={-60}
+              // activeClass={"active"}
               >
                 About
               </NavLinks>
             </NavItem>
+
             <NavItem>
               <NavLinks to="/search">Search on Map</NavLinks>
             </NavItem>
+
             <NavItem>
               <NavLinks to="/review">Review</NavLinks>
             </NavItem>
+
             <NavItem>
               <NavLinks to="/signup">Sign Up</NavLinks>
             </NavItem>

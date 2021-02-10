@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, withRouter } from "react-router-dom";
 import axios from "axios";
+import kakao_login_btn from "../../img/kakao_login_large_narrow.png";
 import {
   Container,
   FormWrap,
@@ -12,6 +13,9 @@ import {
   FormLabel,
   FormInput,
   FormButton,
+  KakaoLogin,
+  KakaoBtn,
+  LinkSignUp,
   Text,
 } from "./LoginElements";
 
@@ -46,7 +50,7 @@ const Login = (props) => {
         <Icon to="/">CAMPING TOGO</Icon>
         <FormContent>
           <Form onSubmit={handleSubmit(onSubmit)}>
-            <FormH1>계정에 로그인 하기</FormH1>
+            <FormH1>Welcome Back</FormH1>
             <FormLabel htmlFor="id">Id</FormLabel>
             <FormInput type="id" name="id" ref={register({ required: true })} />
             {errors.id && <p>아이디를 입력하세요.</p>}
@@ -62,11 +66,14 @@ const Login = (props) => {
 
             {errorsFromSubmit && <p>{errorsFromSubmit}</p>}
             <FormButton type="submit" disabled={loading}>
-              Continue
+              Login
             </FormButton>
-            <Link to="/signup">
-              <Text>가입하기</Text>
-            </Link>
+            <KakaoLogin href="/user/kakao/login">
+              <KakaoBtn src={kakao_login_btn} alt="카카오 로그인" />
+            </KakaoLogin>
+            <LinkSignUp to="/signup">
+              <Text>Sign up</Text>
+            </LinkSignUp>
           </Form>
         </FormContent>
       </FormWrap>

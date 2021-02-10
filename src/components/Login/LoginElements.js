@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Link } from "react-scroll";
+import { Link as LinkRouter } from "react-router-dom";
 
 export const Container = styled.div`
   min-height: 692px;
@@ -10,8 +10,8 @@ export const Container = styled.div`
   right: 0;
   z-index: 0;
   overflow: hidden;
-  background: background-color: #FBAB7E;
-background-image: linear-gradient(0deg, #FBAB7E 0%, #F7CE68 100%);
+  background-color: #fbab7e;
+  background-image: linear-gradient(0deg, #fbab7e 0%, #f7ce68 100%);
 `;
 
 export const FormWrap = styled.div`
@@ -25,7 +25,7 @@ export const FormWrap = styled.div`
   }
 `;
 
-export const Icon = styled(Link)`
+export const Icon = styled(LinkRouter)`
   margin-left: 32px;
   margin-top: 24px;
   text-decoration: none;
@@ -69,15 +69,17 @@ export const FormH1 = styled.h1`
   margin-top: 20px;
   color: #fff;
   font-size: 20px;
-  font-weight: 400px;
+  font-weight: 700px;
   text-align: center;
   margin-bottom: 20px;
+  font-family: "Montserrat", sans-serif;
 `;
 
 export const FormLabel = styled.label`
   margin-bottom: 8px;
   font-size: 14px;
   color: #fff;
+  font-family: "Montserrat", sans-serif;
 `;
 
 export const FormInput = styled.input`
@@ -89,17 +91,35 @@ export const FormInput = styled.input`
 
 export const FormButton = styled.button`
   background: #ffb435;
-  padding: 16px 0;
+  padding: 18px 0;
   border: none;
   border-radius: 4px;
   font-size: 20px;
   color: #fff;
   cursor: pointer;
+  font-family: "Montserrat", sans-serif;
+  margin-bottom: 32px;
+`;
+
+export const KakaoLogin = styled.a`
+  display: flex;
+  justify-content: center;
+`;
+
+export const KakaoBtn = styled.img`
+  width: 336px;
+  height: 100%;
+`;
+
+export const LinkSignUp = styled(LinkRouter)`
+  display: flex;
+  justify-content: center;
 `;
 
 export const Text = styled.span`
-  margin-top: 24px;
+  margin-top: 20px;
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   text-align: center;
+  font-family: "Montserrat", sans-serif;
 `;
