@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../_actions/user_action";
+import { useForm } from "react-hook-form";
+import { Link, withRouter } from "react-router-dom";
+import axios from "axios";
 import {
   Container,
   FormWrap,
@@ -15,33 +16,28 @@ import {
 } from "./LoginElements";
 
 const Login = (props) => {
-  const dispatch = useDispatch();
+  const { register, handleSubmit, errors } = useForm();
+  const [errorsFromSubmit, setErrorsFromSubmit] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [Email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
-
-  const onEmailHandler = (event) => {
-    setEmail(event.currentTarget.value);
-  };
-
-  const onPasswordHandler = (event) => {
-    setPassword(event.currentTarget.value);
-  };
-
-  const onSubmitHandler = (event) => {
-    event.preventDefault();
-    let body = {
-      email: Email,
-      password: Password,
+  const onSubmit = async (data) => {
+    const body = {
+      id: data.id,
+      pw: data.pw,
     };
 
-    dispatch(loginUser(body)).then((response) => {
-      if (response.payload.loginSuccess) {
-        props.history.push("/");
-      } else {
-        alert("Error");
-      }
-    });
+    try {
+      setLoading(true);
+      await axios.post(`/user/login`, body, { withCredentials: true });
+      setLoading(false);
+      props.history.push("/");
+    } catch (error) {
+      setErrorsFromSubmit(error.message);
+      setLoading(false);
+      setTimeout(() => {
+        setErrorsFromSubmit("");
+      }, 5000);
+    }
   };
 
   return (
@@ -49,25 +45,28 @@ const Login = (props) => {
       <FormWrap>
         <Icon to="/">CAMPING TOGO</Icon>
         <FormContent>
-          <Form onSubmit={onSubmitHandler}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <FormH1>계정에 로그인 하기</FormH1>
-            <FormLabel htmlFor="for">Email</FormLabel>
-            <FormInput
-              type="email"
-              name="email"
-              value={Email}
-              onChange={onEmailHandler}
-              required
-            />
+            <FormLabel htmlFor="id">Id</FormLabel>
+            <FormInput type="id" name="id" ref={register({ required: true })} />
+            {errors.id && <p>아이디를 입력하세요.</p>}
             <FormLabel htmlFor="password">Password</FormLabel>
             <FormInput
               type="password"
-              value={Password}
-              onChange={onPasswordHandler}
-              required
+              name="pw"
+              ref={register({ required: true })}
             />
-            <FormButton type="submit">Continue</FormButton>
-            <Text></Text>
+            {errors.password && errors.password.type === "required" && (
+              <p>비밀번호를 입력하세요.</p>
+            )}
+
+            {errorsFromSubmit && <p>{errorsFromSubmit}</p>}
+            <FormButton type="submit" disabled={loading}>
+              Continue
+            </FormButton>
+            <Link to="/signup">
+              <Text>가입하기</Text>
+            </Link>
           </Form>
         </FormContent>
       </FormWrap>
@@ -75,4 +74,4 @@ const Login = (props) => {
   );
 };
 
-export default Login;
+export default withRouter(Login);
