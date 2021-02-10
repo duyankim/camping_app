@@ -8,39 +8,9 @@ import skates from "../img/skates.svg";
 import bike from "../img/bike.svg";
 import camping from "../img/camping.svg";
 
-const HashtagBlock = styled.div`
-   {
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
-    ul {
-      list-style: none;
-      display: flex;
-    }
-  }
-`;
+const HashtagBlock = styled.div``;
 
-const HashtagItem = styled.div`
-   {
-    background-color: #ddbea9;
-    display: flex;
-    position: relative;
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin: 0 auto;
-  }
-  img {
-    width: 60px;
-    height: 60px;
-    margin: 10px;
-    filter: invert(100%) sepia(0%) saturate(1844%) hue-rotate(71deg)
-      brightness(113%) contrast(93%);
-  }
-  .hashtag-text {
-    width: 150px;
-  }
-`;
+const HashtagItem = styled.div``;
 
 const hashtags = [
   { icon: beach, text: "#바닷가" },
