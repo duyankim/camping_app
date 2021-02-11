@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, withRouter } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 import kakao_login_btn from "../../img/kakao_login_large_narrow.png";
 import {
