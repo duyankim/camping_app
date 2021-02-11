@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import Map from "./Map";
 import {
   SearchContainer,
@@ -25,6 +26,19 @@ const SearchMap = () => {
   const { Search } = Input;
   const onSearch = (value) => console.log(value);
 
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = () => {
+      axios
+        .get("http://localhost:3005/location/1/3/127.4030939/35.9774208/150000")
+        .then((response) => {
+          setData(response.data.packet.items);
+        });
+    };
+    fetchData();
+  }, [data]);
+
   return (
     <>
       <SearchContainer>
@@ -32,16 +46,9 @@ const SearchMap = () => {
           <SearchRow>
             <Aside>
               <SearchFilter>
-                {/*<Form>
-                  <InputWrapper>
-                    <Label />
-                    <Input />
-                  </InputWrapper>
-                  <Button>검색</Button>
-                </Form>*/}
                 <Space direction="vertical">
                   <Search
-                    placeholder="input search text"
+                    placeholder="이름으로 검색"
                     onSearch={onSearch}
                     enterButton
                   />
@@ -49,28 +56,25 @@ const SearchMap = () => {
               </SearchFilter>
               <SearchResult>
                 <PlaceList>
-                  <PlaceItem>
-                    <ImgWrap>
-                      <Img />
-                      <Intro>여름</Intro>
-                    </ImgWrap>
-                    <Content>
-                      <Location>
-                        전라북도 진안군 주천면 동상주천로 1716
-                      </Location>
-                      <Name>운일암반일암관광지 야영장</Name>
-                      <Description>
-                        웨스턴캠프는 충남 아산시 음봉면에 자리 잡고 있다.
-                        아산시청을 기점으로 5㎞가량 떨어졌다. 자동차를 타고
-                        시민로, 곡교천로, 충무로를 번갈아 달리면 닿는다.
-                        도착까지 걸리는 시간은 10분 안팎이다.
-                      </Description>
-                      <ReadMore>더보기</ReadMore>
-                    </Content>
-                  </PlaceItem>
+                  {data.map((item) => {
+                    return (
+                      <PlaceItem>
+                        <ImgWrap>
+                          <Img />
+                          <Intro>{item.lctCl}</Intro>
+                        </ImgWrap>
+                        <Content>
+                          <Location>{item.addr1}</Location>
+                          <Name>{item.facltNm}</Name>
+                          <Description>{item.lineIntro}</Description>
+                          <ReadMore>더보기</ReadMore>
+                        </Content>
+                      </PlaceItem>
+                    );
+                  })}
                 </PlaceList>
               </SearchResult>
-              <Pagination size="small" total={50} />
+              <Pagination size="small" total={5} />
             </Aside>
             <Main>
               <Map />

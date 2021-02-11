@@ -83,6 +83,7 @@ export const Button = styled.button`
 export const SearchResult = styled.div`
   padding-right: 30px;
   padding-left: 30px;
+  margin-bottom: 15px;
 `;
 
 export const PlaceList = styled.div`
@@ -90,7 +91,6 @@ export const PlaceList = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   grid-gap: 30px;
   align-items: stretch;
-  margin-bottom: 15px;
 `;
 
 export const PlaceItem = styled.div`
@@ -99,7 +99,6 @@ export const PlaceItem = styled.div`
 
   &:hover {
     box-shadow: 10px 5px 40px 20px darken(#341cac, 10%);
-    cursor: pointer;
   }
 `;
 
