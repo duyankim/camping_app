@@ -83,7 +83,7 @@ export const NavLinks = styled(LinkRouter)`
   cursor: pointer;
 
   &.active {
-    border-bottom: 3px solid #a5a58d;
+    border-bottom: 3px solid #ffb435;
   }
 `;
 

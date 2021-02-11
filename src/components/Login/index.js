@@ -68,7 +68,7 @@ const Login = (props) => {
             <FormButton type="submit" disabled={loading}>
               Login
             </FormButton>
-            <KakaoLogin href="/user/kakao/login">
+            <KakaoLogin href="/user/kakao/oauth">
               <KakaoBtn src={kakao_login_btn} alt="카카오 로그인" />
             </KakaoLogin>
             <LinkSignUp to="/signup">

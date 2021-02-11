@@ -38,7 +38,7 @@ export const Form = styled.form`
 `;
 
 export const InputWrapper = styled.div`
-  width: 280px;
+  /* width: 280px;
   margin: 0 auto;
   position: relative;
   margin-bottom: 23px;
@@ -47,7 +47,7 @@ export const InputWrapper = styled.div`
   background: #fff;
   border-radius: 10px;
   display: flex;
-  flex-direction: row;
+  flex-direction: row; */
 `;
 
 export const Label = styled.label`
@@ -66,7 +66,7 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  min-width: 30px;
+  /*min-width: 30px;
   height: 45px;
   margin-left: 20px;
   background: #ffb435;
@@ -77,58 +77,44 @@ export const Button = styled.button`
   font-size: 18px;
   transition: all 0.4s ease;
   padding: 0 20px;
-  box-shadow: 0px 8px 20px 0px rgb(0 0 0 / 15%);
+  box-shadow: 0px 8px 20px 0px rgb(0 0 0 / 15%);*/
 `;
 
 export const SearchResult = styled.div`
-  padding-right: 24px;
-  padding-left: 60px;
+  padding-right: 30px;
+  padding-left: 30px;
 `;
 
-export const PlaceList = styled.div``;
+export const PlaceList = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-gap: 30px;
+  align-items: stretch;
+  margin-bottom: 15px;
+`;
 
 export const PlaceItem = styled.div`
-  width: 95%;
-  position: relative;
-  max-width: 700px;
-  margin: auto;
-  background: #fff;
-  box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
-  padding: 25px;
-  border-radius: 25px;
-  height: 300px;
-  transition: all 0.3s;
+  box-shadow: 10px 5px 40px 20px darken(#341cac, 5%);
+  transition: 0.25s;
 
-  @media screen and (max-width: 992px) {
-    max-width: 680px;
-    height: 200px;
-  }
-
-  @media screen and (max-width: 768px) {
-    min-height: 500px;
-    height: auto;
-    margin: 180px auto;
-  }
-
-  @media screen and (max-height: 500px) and (min-width: 992px) {
-    height: 350px;
+  &:hover {
+    box-shadow: 10px 5px 40px 20px darken(#341cac, 10%);
+    cursor: pointer;
   }
 `;
 
 export const ImgWrap = styled.div`
-  width: 220px;
-  flex-shrink: 0;
-  height: 220px;
   background-image: url("https://gocamping.or.kr/upload/camp/2444/thumb/thumb_720_6783oCTGScUXn9FNIUNHc6Im.jpg");
+  height: 150px;
+  width: 100%;
+  padding: 5px 15px 0px 15px;
+  width: 100%;
   background-size: cover;
-  box-shadow: 4px 13px 30px 1px rgba(34, 35, 58, 0.2);
-  border-radius: 20px;
-  transform: translateX(-60px);
-  overflow: hidden;
+  color: #fff;
 `;
 
 export const Img = styled.img`
-  width: 100%;
+  /* width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
@@ -148,64 +134,52 @@ export const Img = styled.img`
   }
   @media screen and (max-height: 500px) and (min-width: 992px) {
     height: 270px;
-  }
+  } */
+`;
+
+export const Intro = styled.p`
+  margin: 0;
+  font-weight: 700;
+  line-height: 0.5;
 `;
 
 export const Content = styled.div`
-  padding-right: 25px;
-  @media screen and (max-width: 992px) {
-    // width: 55%;
-  }
-  @media screen and (max-width: 768px) {
-    margin-top: -80px;
-    text-align: center;
-    padding: 0 30px;
-  }
-
-  @media screen and (max-width: 576px) {
-    padding: 0;
-  }
-  > * {
-    opacity: 0;
-    transform: translateY(25px);
-    transition: all 0.4s;
-  }
+  padding: 15px;
+  background-color: #fff;
+  width: 100%;
 `;
 
 export const Location = styled.span`
-  color: #7b7992;
-  margin-bottom: 15px;
-  display: block;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
+  color: grey;
 `;
 
 export const Name = styled.div`
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
-  color: #0d0925;
-  margin-bottom: 20px;
+  color: #000;
+  margin: 4px 0 4px 0;
 `;
 
 export const Description = styled.div`
-  color: #4e4a67;
-  margin-bottom: 30px;
-  line-height: 1.5em;
+  padding-bottom: 40px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #000;
 `;
 
 export const ReadMore = styled.div`
-  display: inline-flex;
-  background-image: linear-gradient(147deg, #fe8a39 0%, #fd3838 74%);
-  padding: 15px 35px;
-  border-radius: 50px;
-  color: #fff;
-  box-shadow: 0px 14px 80px rgba(252, 56, 56, 0.4);
-  text-decoration: none;
-  font-weight: 500;
-  justify-content: center;
-  text-align: center;
-  letter-spacing: 1px;
-  @media screen and (max-width: 576px) {
-    width: 100%;
+  border: none;
+  box-shadow: none;
+  font-family: inherit;
+  background-color: transparent;
+  color: #000;
+  font-size: 15px;
+  transition: 0.25s;
+
+  &:hover {
+    transform: translate(10px, 0);
   }
 `;
 

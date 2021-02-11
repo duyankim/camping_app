@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import Search from "../components/Search";
+import SearchMap from "../components/Search";
 
 const SearchPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -13,7 +13,7 @@ const SearchPage = () => {
     <>
       <Sidebar isOpen={isOpen} toggle={toggle} />
       <Navbar toggle={toggle} />
-      <Search />
+      <SearchMap />
     </>
   );
 };
