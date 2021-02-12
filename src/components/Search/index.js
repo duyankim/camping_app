@@ -26,21 +26,31 @@ const SearchMap = () => {
   const { Search } = Input;
   const onSearch = (value) => console.log(value);
 
-  const [data, setData] = useState([]);
-  const [coord, setCoord] = useState([]);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchData = () => {
-      axios
-        .get("http://localhost:3005/location/1/4/127.4030939/35.9774208/1500", {
-          withCredentials: true,
-        })
-        .then((response) => {
-          setData(response.packet.items);
-        });
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          `location/1/3/127.3105215/37.904902/1500`
+        );
+        setData(response.data.packet.items);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
     };
     fetchData();
-  }, [data]);
+  }, []);
+
+  if (loading) {
+    return <PlaceList>Loading...</PlaceList>;
+  }
+  if (!data) {
+    return null;
+  }
 
   function onChange(value) {
     console.log("onChange: ", value);
