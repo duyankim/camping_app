@@ -1,6 +1,7 @@
 import Home from "./pages/Home";
 import SearchPage from "./pages/SearchPage";
 import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import Info from "./components/Info";
 import "./App.css";
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" component={Home} exact />
         <Route path="/about" component={Info} exact />
         <Route path="/search" component={SearchPage} exact />
+        <Route path="/register" component={RegisterPage} exact />
         <Route path="/login" component={LoginPage} exact />
       </Switch>
     </Router>
