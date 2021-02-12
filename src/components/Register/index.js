@@ -78,6 +78,9 @@ const Register = (props) => {
               name="address"
               ref={register({ required: false })}
             />
+            {errors.pw && errors.pw.type === "required" && (
+              <p>비밀번호를 입력하세요.</p>
+            )}
 
             {errorsFromSubmit && <p>{errorsFromSubmit}</p>}
             <FormButton type="submit" disabled={loading}>

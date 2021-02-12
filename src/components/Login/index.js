@@ -60,7 +60,7 @@ const Login = (props) => {
               name="pw"
               ref={register({ required: true })}
             />
-            {errors.password && errors.password.type === "required" && (
+            {errors.pw && errors.pw.type === "required" && (
               <p>비밀번호를 입력하세요.</p>
             )}
 
