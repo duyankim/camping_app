@@ -9,25 +9,21 @@ import {
   SearchFilter,
   SearchResult,
   PlaceList,
-  PlaceItem,
   Main,
-  ImgWrap,
-  Img,
-  Intro,
-  Content,
-  Location,
-  Name,
-  Description,
-  ReadMore,
 } from "./SearchElements";
-import { Space, Input, Pagination, Slider } from "antd";
+import { Space, Input, Pagination, Card } from "antd";
 
 const SearchMap = () => {
   const { Search } = Input;
-  const onSearch = (value) => console.log(value);
+  const { Meta } = Card;
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [input, setInput] = useState("");
+  const onSearch = (value) => {
+    console.log(value);
+    setInput(value);
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,30 +69,22 @@ const SearchMap = () => {
                     onSearch={onSearch}
                     enterButton
                   />
-                  <Slider
-                    range
-                    step={20}
-                    onChange={onChange}
-                    onAfterChange={onAfterChange}
-                  />
                 </Space>
               </SearchFilter>
               <SearchResult>
                 <PlaceList>
                   {data.map((item) => {
                     return (
-                      <PlaceItem>
-                        <ImgWrap>
-                          <Img />
-                          <Intro>{item.lctCl}</Intro>
-                        </ImgWrap>
-                        <Content>
-                          <Location>{item.addr1}</Location>
-                          <Name>{item.facltNm}</Name>
-                          <Description>{item.lineIntro}</Description>
-                          <ReadMore>더보기</ReadMore>
-                        </Content>
-                      </PlaceItem>
+                      <Card
+                        hoverable
+                        style={{ width: 300 }}
+                        cover={<img alt="example" src={item.firstImageUrl} />}
+                      >
+                        <Meta
+                          title={item.facltNm}
+                          description={item.lineIntro}
+                        />
+                      </Card>
                     );
                   })}
                 </PlaceList>
