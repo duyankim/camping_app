@@ -7,11 +7,20 @@ import {
   SearchResult,
   PlaceList,
 } from "./SearchElements";
-import { Divider, Input, Select, Pagination, Card, Row, Col } from "antd";
+import {
+  Divider,
+  Input,
+  InputNumber,
+  Select,
+  Pagination,
+  Card,
+  Row,
+  Col,
+} from "antd";
 
 const SearchMap = () => {
   const { Search } = Input;
-  const { Meta } = Card;
+
   const { Option } = Select;
 
   const [data, setData] = useState(null);
@@ -60,6 +69,14 @@ const SearchMap = () => {
           <div>
             <SearchFilter>
               <Input.Group compact>
+                <InputNumber
+                  defaultValue={100}
+                  min={1}
+                  max={20000}
+                  formatter={(value) => `반경 ${value}m`}
+                  parser={(value) => value.replace("m", "")}
+                  onChange={onChange}
+                />
                 <Select
                   defaultValue="주소"
                   onChange={onChange}
@@ -79,30 +96,7 @@ const SearchMap = () => {
               </Input.Group>
             </SearchFilter>
             <Divider orientation="left">검색결과</Divider>
-            <SearchResult>
-              <Row gutter={[12, 12]}>
-                {data.map((item) => {
-                  if (!item.firstImageUrl) {
-                    item.firstImageUrl = `https://bit.ly/3rYGoxK`;
-                  }
-                  return (
-                    <Col sm={24} xl={12}>
-                      <Card
-                        hoverable
-                        style={{ width: 300 }}
-                        cover={<img alt="example" src={item.firstImageUrl} />}
-                      >
-                        <Meta
-                          title={item.facltNm}
-                          description={item.lineIntro}
-                        />
-                      </Card>
-                    </Col>
-                  );
-                })}
-                <Pagination size="small" total={12} />
-              </Row>
-            </SearchResult>
+            <SearchResult />
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
