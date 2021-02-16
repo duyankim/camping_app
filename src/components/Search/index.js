@@ -3,19 +3,16 @@ import axios from "axios";
 import Map from "./Map";
 import {
   SearchContainer,
-  SearchWrapper,
-  SearchRow,
-  Aside,
   SearchFilter,
   SearchResult,
   PlaceList,
-  Main,
 } from "./SearchElements";
-import { Space, Input, Pagination, Card } from "antd";
+import { Divider, Input, Select, Pagination, Card, Row, Col } from "antd";
 
 const SearchMap = () => {
   const { Search } = Input;
   const { Meta } = Card;
+  const { Option } = Select;
 
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -30,7 +27,7 @@ const SearchMap = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `location/1/3/127.3105215/37.904902/1500`
+          `location/1/4/127.3105215/37.904902/15000`
         );
         setData(response.data.packet.items);
       } catch (e) {
@@ -57,24 +54,39 @@ const SearchMap = () => {
   }
 
   return (
-    <>
-      <SearchContainer>
-        <SearchWrapper>
-          <SearchRow>
-            <Aside>
-              <SearchFilter>
-                <Space direction="vertical">
-                  <Search
-                    placeholder="이름으로 검색"
-                    onSearch={onSearch}
-                    enterButton
-                  />
-                </Space>
-              </SearchFilter>
-              <SearchResult>
-                <PlaceList>
-                  {data.map((item) => {
-                    return (
+    <SearchContainer>
+      <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ flex: `100%` }}>
+        <Col sm={24} xl={10} className="gutter-row">
+          <div>
+            <SearchFilter>
+              <Input.Group compact>
+                <Select
+                  defaultValue="주소"
+                  onChange={onChange}
+                  style={{ width: "20%" }}
+                >
+                  <Option value="address">주소</Option>
+                  <Option value="nearby">가까운 거리</Option>
+                  <Option value="keyword">이름</Option>
+                </Select>
+
+                <Search
+                  style={{ width: "40%" }}
+                  placeholder="검색"
+                  onSearch={onSearch}
+                  enterButton
+                />
+              </Input.Group>
+            </SearchFilter>
+            <Divider orientation="left">검색결과</Divider>
+            <SearchResult>
+              <Row gutter={[12, 12]}>
+                {data.map((item) => {
+                  if (!item.firstImageUrl) {
+                    item.firstImageUrl = `https://bit.ly/3rYGoxK`;
+                  }
+                  return (
+                    <Col sm={24} xl={12}>
                       <Card
                         hoverable
                         style={{ width: 300 }}
@@ -85,19 +97,19 @@ const SearchMap = () => {
                           description={item.lineIntro}
                         />
                       </Card>
-                    );
-                  })}
-                </PlaceList>
-              </SearchResult>
-              <Pagination size="small" total={5} />
-            </Aside>
-            <Main>
-              <Map />
-            </Main>
-          </SearchRow>
-        </SearchWrapper>
-      </SearchContainer>
-    </>
+                    </Col>
+                  );
+                })}
+                <Pagination size="small" total={12} />
+              </Row>
+            </SearchResult>
+          </div>
+        </Col>
+        <Col sm={24} xl={14} className="gutter-row">
+          <Map />
+        </Col>
+      </Row>
+    </SearchContainer>
   );
 };
 
