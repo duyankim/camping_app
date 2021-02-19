@@ -1,1 +1,1 @@
-export const LOGIN_USER = "login_user";
+export const SEND_GEO = "send_geo";

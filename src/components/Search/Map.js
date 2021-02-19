@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-
+import { send_geo } from "../../_actions/geo_action";
+import { connect } from "react-redux";
 const { kakao } = window;
 
 const Map = (props) => {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
 
-  useEffect(() => {
-    console.log(`${lng}/${lat}`);
-  }, [props.refresh]);
+  const mapStateToProps = (state) => {
+    return {
+      mapX: state.mapX,
+      mapY: state.mapY,
+    };
+  };
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {
@@ -80,4 +84,4 @@ const Map = (props) => {
   );
 };
 
-export default Map;
+export default connect(mapStateToProps)(Map);
