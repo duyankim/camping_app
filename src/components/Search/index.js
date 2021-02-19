@@ -1,66 +1,93 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Map from "./Map";
-import {
-  SearchContainer,
-  SearchFilter,
-  SearchResult,
-  PlaceList,
-} from "./SearchElements";
+import { SearchContainer, SearchFilter, SearchResult } from "./SearchElements";
 import {
   Divider,
   Input,
   InputNumber,
   Select,
-  Pagination,
-  Card,
   Row,
   Col,
+  Pagination,
+  Card,
 } from "antd";
 
 const SearchMap = () => {
   const { Search } = Input;
-
   const { Option } = Select;
+  const { Meta } = Card;
+  const [input, setInput] = useState(null);
+  const [radius, setRadius] = useState(1000);
+  const [page, setPage] = useState(1);
+  const [mapX, setMapX] = useState(null);
+  const [mapY, setMapY] = useState(null);
 
-  const [data, setData] = useState(null);
+  const [currLocation, setCurrLocation] = useState({
+    lng: "127.6150215",
+    lat: "37.904902",
+  });
+  console.log(`currlocation : ${currLocation}`);
+  console.log(radius);
+  console.log(input);
+
   const [loading, setLoading] = useState(false);
-  const [input, setInput] = useState("");
-  const onSearch = (value) => {
-    console.log(value);
-    setInput(value);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+
+  function searchGeo() {
+    return axios({
+      method: "GET",
+      url: "https://dapi.kakao.com/v2/local/search/address.json",
+      headers: { Authorization: API_KEY },
+      params: {
+        query: input,
+      },
+      mode: "cors",
+    });
+  }
+  searchGeo()
+    .then((res) => {
+      console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
+      setMapX(res.data.documents[0].x);
+      setMapY(res.data.documents[0].y);
+    })
+    .catch((e) => {
+      console.log("search error", e);
+    });
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      setData(null);
+      const response = await axios.get(
+        `location/1/4/${mapX}/${mapY}/${radius}`
+      );
+      setData(response.data.packet.items);
+    } catch (e) {
+      setError(e);
+    }
+    setLoading(false);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `location/1/4/127.3105215/37.904902/15000`
-        );
-        setData(response.data.packet.items);
-      } catch (e) {
-        console.log(e);
-      }
-      setLoading(false);
-    };
     fetchData();
-  }, []);
+  }, [input]);
 
-  if (loading) {
-    return <PlaceList>Loading...</PlaceList>;
-  }
-  if (!data) {
-    return null;
-  }
+  if (loading) return <div>loading..</div>;
+  if (error) return <div>error</div>;
+  if (!data) return null;
 
   function onChange(value) {
-    console.log("onChange: ", value);
+    console.log("onChange:", value);
   }
 
-  function onAfterChange(value) {
-    console.log("onAfterChange: ", value);
-  }
+  const onSearch = (value, e) => {
+    console.log(value);
+    e.preventDefault();
+    setInput(value);
+  };
 
   return (
     <SearchContainer>
@@ -70,25 +97,25 @@ const SearchMap = () => {
             <SearchFilter>
               <Input.Group compact>
                 <InputNumber
-                  defaultValue={100}
+                  defaultValue={1000}
                   min={1}
                   max={20000}
-                  formatter={(value) => `반경 ${value}m`}
-                  parser={(value) => value.replace("m", "")}
-                  onChange={onChange}
+                  formatter={(value) => `${value}m내`}
+                  parser={(value) => value.replace("m내", "")}
+                  onChange={(value) => setRadius(value)}
+                  style={{ width: "20%" }}
                 />
                 <Select
                   defaultValue="주소"
                   onChange={onChange}
-                  style={{ width: "20%" }}
+                  style={{ width: "30%" }}
                 >
                   <Option value="address">주소</Option>
                   <Option value="nearby">가까운 거리</Option>
-                  <Option value="keyword">이름</Option>
                 </Select>
 
                 <Search
-                  style={{ width: "40%" }}
+                  style={{ width: "50%" }}
                   placeholder="검색"
                   onSearch={onSearch}
                   enterButton
@@ -96,11 +123,35 @@ const SearchMap = () => {
               </Input.Group>
             </SearchFilter>
             <Divider orientation="left">검색결과</Divider>
-            <SearchResult />
+            <SearchResult>
+              <Row gutter={[12, 12]}>
+                {data.map((item) => {
+                  if (!item.firstImageUrl) {
+                    item.firstImageUrl = `https://bit.ly/3rYGoxK`;
+                  }
+                  return (
+                    <Col sm={24} xl={12}>
+                      <Card
+                        hoverable
+                        key={item.contentId}
+                        style={{ width: 300 }}
+                        cover={<img alt="example" src={item.firstImageUrl} />}
+                      >
+                        <Meta
+                          title={item.facltNm}
+                          description={item.lineIntro}
+                        />
+                      </Card>
+                    </Col>
+                  );
+                })}
+                <Pagination size="small" total={12} />
+              </Row>
+            </SearchResult>
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
-          <Map />
+          <Map sendLatLng={(lng, lat) => setCurrLocation(lng, lat)} />
         </Col>
       </Row>
     </SearchContainer>
