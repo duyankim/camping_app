@@ -1,18 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { send_geo } from "../../_actions/geo_action";
-import { connect } from "react-redux";
 const { kakao } = window;
 
 const Map = (props) => {
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
 
-  const mapStateToProps = (state) => {
-    return {
-      mapX: state.mapX,
-      mapY: state.mapY,
-    };
-  };
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {
@@ -57,8 +49,8 @@ const Map = (props) => {
       setLat(latlng.getLat());
       setLng(latlng.getLng());
 
-      console.log(`위도: ${latlng.getLat()}`);
-      console.log(`경도: ${latlng.getLng()}`);
+      console.log(`click위도: ${latlng.getLat()}`);
+      console.log(`click경도: ${latlng.getLng()}`);
     });
 
     // *마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다*
@@ -66,8 +58,8 @@ const Map = (props) => {
       // 지도 중심좌표를 얻어옵니다
       let latlng = map.getCenter();
 
-      console.log(`위도: ${latlng.getLat()}`);
-      console.log(`경도: ${latlng.getLng()}`);
+      console.log(`move위도: ${latlng.getLat()}`);
+      console.log(`move경도: ${latlng.getLng()}`);
     });
   }, []);
 
@@ -84,4 +76,4 @@ const Map = (props) => {
   );
 };
 
-export default connect(mapStateToProps)(Map);
+export default Map;
