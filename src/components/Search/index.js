@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer, useCallback } from "react";
 import axios from "axios";
 import Map from "./Map";
 import { SearchContainer, SearchFilter, SearchResult } from "./SearchElements";
@@ -13,7 +13,31 @@ import {
   Card,
 } from "antd";
 
+const INITIAL_STATE = { mapX: 33.452671, mapY: 126.574792 };
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "CHANGE_MAPX":
+      return { ...state, mapX: action.value };
+    case "CHANGE_MAPY":
+      return { ...state, mapY: action.value };
+    default:
+      return state;
+  }
+}
+
+export const SearchMapDispatch = React.createContext(null);
+
 const SearchMap = () => {
+  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  const onClick = useCallback((e) => {
+    const { value } = e.target;
+    dispatch({
+      type: "CHANG_MAPX",
+      mapX,
+    });
+  });
+
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
@@ -23,11 +47,6 @@ const SearchMap = () => {
   const [mapX, setMapX] = useState(null);
   const [mapY, setMapY] = useState(null);
 
-  const [currLocation, setCurrLocation] = useState({
-    lng: "127.6150215",
-    lat: "37.904902",
-  });
-  console.log(`currlocation : ${currLocation}`);
   console.log(radius);
   console.log(input);
 
@@ -39,11 +58,10 @@ const SearchMap = () => {
     return axios({
       method: "GET",
       url: "https://dapi.kakao.com/v2/local/search/address.json",
-      headers: { Authorization: API_KEY },
+      headers: { Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6` },
       params: {
         query: input,
       },
-      mode: "cors",
     });
   }
   searchGeo()
@@ -123,35 +141,37 @@ const SearchMap = () => {
               </Input.Group>
             </SearchFilter>
             <Divider orientation="left">검색결과</Divider>
-            <SearchResult>
-              <Row gutter={[12, 12]}>
-                {data.map((item) => {
-                  if (!item.firstImageUrl) {
-                    item.firstImageUrl = `https://bit.ly/3rYGoxK`;
-                  }
-                  return (
-                    <Col sm={24} xl={12}>
-                      <Card
-                        hoverable
-                        key={item.contentId}
-                        style={{ width: 300 }}
-                        cover={<img alt="example" src={item.firstImageUrl} />}
-                      >
-                        <Meta
-                          title={item.facltNm}
-                          description={item.lineIntro}
-                        />
-                      </Card>
-                    </Col>
-                  );
-                })}
-                <Pagination size="small" total={12} />
-              </Row>
-            </SearchResult>
+            <SearchMapDispatch.Provider value={dispatch}>
+              <SearchResult>
+                <Row gutter={[12, 12]}>
+                  {data.map((item) => {
+                    if (!item.firstImageUrl) {
+                      item.firstImageUrl = `https://bit.ly/3rYGoxK`;
+                    }
+                    return (
+                      <Col sm={24} xl={12}>
+                        <Card
+                          hoverable
+                          key={item.contentId}
+                          style={{ width: 300 }}
+                          cover={<img alt="example" src={item.firstImageUrl} />}
+                        >
+                          <Meta
+                            title={item.facltNm}
+                            description={item.lineIntro}
+                          />
+                        </Card>
+                      </Col>
+                    );
+                  })}
+                  <Pagination size="small" total={12} />
+                </Row>
+              </SearchResult>
+            </SearchMapDispatch.Provider>
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
-          <Map sendLatLng={(lng, lat) => setCurrLocation(lng, lat)} />
+          <Map onClick={onClick} />
         </Col>
       </Row>
     </SearchContainer>
