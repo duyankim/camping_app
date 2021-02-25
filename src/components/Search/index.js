@@ -29,6 +29,13 @@ const SearchMap = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+  const [marker, setMarker] = useState({
+    x: "",
+    y: "",
+  });
+  useEffect(() => {
+    console.log("marker", marker);
+  }, [marker]);
 
   // function searchGeo() {
   //   return axios({
@@ -56,7 +63,7 @@ const SearchMap = () => {
       setError(null);
       setData(null);
       const response = await axios.get(
-        `location/1/4/${mapX}/${mapY}/${radius}`
+        `location/1/4/127.3884379/35.9829185/${radius}`
       );
       setData(response.data.packet.items);
     } catch (e) {
@@ -78,9 +85,9 @@ const SearchMap = () => {
   }
 
   const onSearch = (value, e) => {
-    console.log(value);
-    e.preventDefault();
-    setInput(value);
+    // console.log(value);
+    // e.preventDefault();
+    // setInput(value);
   };
 
   return (
@@ -146,7 +153,7 @@ const SearchMap = () => {
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
-          <Map />
+          <Map marker={marker} setMarker={setMarker} />
         </Col>
       </Row>
     </SearchContainer>

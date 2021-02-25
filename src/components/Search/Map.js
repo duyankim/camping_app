@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 const { kakao } = window;
 
 const Map = (props) => {
+  console.log(props);
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {
@@ -46,6 +47,10 @@ const Map = (props) => {
 
       console.log(`click위도: ${latlng.getLat()}`);
       console.log(`click경도: ${latlng.getLng()}`);
+      props.setMarker({
+        x: latlng.getLat(),
+        y: latlng.getLng(),
+      });
     });
 
     // *마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다*
