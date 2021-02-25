@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Map from "./Map";
 import { SearchContainer, SearchFilter, SearchResult } from "./SearchElements";
@@ -18,12 +18,11 @@ const SearchMap = () => {
   const { Option } = Select;
   const { Meta } = Card;
   const [input, setInput] = useState(null);
-  const [radius, setRadius] = useState(1000);
+
   const [page, setPage] = useState(1);
   const [mapX, setMapX] = useState(null);
   const [mapY, setMapY] = useState(null);
 
-  console.log(radius);
   console.log(input);
 
   const [loading, setLoading] = useState(false);
@@ -33,8 +32,26 @@ const SearchMap = () => {
     x: "",
     y: "",
   });
+  const [search, setSearch] = useState({
+    type: "address",
+    radius: 1000,
+  });
+
   useEffect(() => {
-    console.log("marker", marker);
+    console.log("marker", marker, search);
+    if (search.type === "nearby") {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get(
+            `location/1/4/127.3884379/35.9829185/${search.radius}`
+          );
+          setData(response.data.packet.items);
+        } catch (e) {
+          setError(e);
+        }
+      };
+      fetchData();
+    }
   }, [marker]);
 
   // function searchGeo() {
@@ -63,7 +80,7 @@ const SearchMap = () => {
       setError(null);
       setData(null);
       const response = await axios.get(
-        `location/1/4/127.3884379/35.9829185/${radius}`
+        `location/1/4/127.3884379/35.9829185/${search.radius}`
       );
       setData(response.data.packet.items);
     } catch (e) {
@@ -74,6 +91,7 @@ const SearchMap = () => {
 
   useEffect(() => {
     fetchData();
+    // eslint-disable-next-line
   }, [input]);
 
   if (loading) return <div>loading..</div>;
@@ -81,7 +99,9 @@ const SearchMap = () => {
   if (!data) return null;
 
   function onChange(value) {
+    search.type = value;
     console.log("onChange:", value);
+    console.log("onChange:", search);
   }
 
   const onSearch = (value, e) => {
@@ -103,13 +123,21 @@ const SearchMap = () => {
                   max={20000}
                   formatter={(value) => `${value}m내`}
                   parser={(value) => value.replace("m내", "")}
-                  onChange={(value) => setRadius(value)}
+                  onChange={(value) => {
+                    search.radius = value;
+                    setSearch({ ...search });
+                  }}
                   style={{ width: "20%" }}
                 />
                 <Select
                   defaultValue="주소"
-                  onChange={onChange}
+                  // onChange={onChange}
+                  onChange={(value) => {
+                    search.type = value;
+                    setSearch({ ...search });
+                  }}
                   style={{ width: "30%" }}
+                  value={search.type}
                 >
                   <Option value="address">주소</Option>
                   <Option value="nearby">가까운 거리</Option>
