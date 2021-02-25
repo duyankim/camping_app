@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 const { kakao } = window;
 
 const Map = (props) => {
-  const [lat, setLat] = useState(null);
-  const [lng, setLng] = useState(null);
-
   useEffect(() => {
     const container = document.getElementById("map");
     const options = {
@@ -46,8 +43,6 @@ const Map = (props) => {
 
       // 마커 위치를 클릭한 위치로 옮깁니다
       marker.setPosition(latlng);
-      setLat(latlng.getLat());
-      setLng(latlng.getLng());
 
       console.log(`click위도: ${latlng.getLat()}`);
       console.log(`click경도: ${latlng.getLng()}`);

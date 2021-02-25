@@ -13,31 +13,7 @@ import {
   Card,
 } from "antd";
 
-const INITIAL_STATE = { mapX: 33.452671, mapY: 126.574792 };
-
-function reducer(state, action) {
-  switch (action.type) {
-    case "CHANGE_MAPX":
-      return { ...state, mapX: action.value };
-    case "CHANGE_MAPY":
-      return { ...state, mapY: action.value };
-    default:
-      return state;
-  }
-}
-
-export const SearchMapDispatch = React.createContext(null);
-
 const SearchMap = () => {
-  const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const onClick = useCallback((e) => {
-    const { value } = e.target;
-    dispatch({
-      type: "CHANG_MAPX",
-      mapX,
-    });
-  });
-
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
@@ -54,25 +30,25 @@ const SearchMap = () => {
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
 
-  function searchGeo() {
-    return axios({
-      method: "GET",
-      url: "https://dapi.kakao.com/v2/local/search/address.json",
-      headers: { Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6` },
-      params: {
-        query: input,
-      },
-    });
-  }
-  searchGeo()
-    .then((res) => {
-      console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
-      setMapX(res.data.documents[0].x);
-      setMapY(res.data.documents[0].y);
-    })
-    .catch((e) => {
-      console.log("search error", e);
-    });
+  // function searchGeo() {
+  //   return axios({
+  //     method: "GET",
+  //     url: "https://dapi.kakao.com/v2/local/search/address.json",
+  //     headers: { Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6` },
+  //     params: {
+  //       query: input,
+  //     },
+  //   });
+  // }
+  // searchGeo()
+  //   .then((res) => {
+  //     console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
+  //     setMapX(res.data.documents[0].x);
+  //     setMapY(res.data.documents[0].y);
+  //   })
+  //   .catch((e) => {
+  //     console.log("local search error", e);
+  //   });
 
   const fetchData = async () => {
     try {
@@ -141,37 +117,36 @@ const SearchMap = () => {
               </Input.Group>
             </SearchFilter>
             <Divider orientation="left">검색결과</Divider>
-            <SearchMapDispatch.Provider value={dispatch}>
-              <SearchResult>
-                <Row gutter={[12, 12]}>
-                  {data.map((item) => {
-                    if (!item.firstImageUrl) {
-                      item.firstImageUrl = `https://bit.ly/3rYGoxK`;
-                    }
-                    return (
-                      <Col sm={24} xl={12}>
-                        <Card
-                          hoverable
-                          key={item.contentId}
-                          style={{ width: 300 }}
-                          cover={<img alt="example" src={item.firstImageUrl} />}
-                        >
-                          <Meta
-                            title={item.facltNm}
-                            description={item.lineIntro}
-                          />
-                        </Card>
-                      </Col>
-                    );
-                  })}
-                  <Pagination size="small" total={12} />
-                </Row>
-              </SearchResult>
-            </SearchMapDispatch.Provider>
+
+            <SearchResult>
+              <Row gutter={[12, 12]}>
+                {data.map((item) => {
+                  if (!item.firstImageUrl) {
+                    item.firstImageUrl = `https://bit.ly/3rYGoxK`;
+                  }
+                  return (
+                    <Col sm={24} xl={12}>
+                      <Card
+                        hoverable
+                        key={item.contentId}
+                        style={{ width: 300 }}
+                        cover={<img alt="example" src={item.firstImageUrl} />}
+                      >
+                        <Meta
+                          title={item.facltNm}
+                          description={item.lineIntro}
+                        />
+                      </Card>
+                    </Col>
+                  );
+                })}
+                <Pagination size="small" total={12} />
+              </Row>
+            </SearchResult>
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
-          <Map onClick={onClick} />
+          <Map />
         </Col>
       </Row>
     </SearchContainer>
