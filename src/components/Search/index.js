@@ -13,45 +13,50 @@ import {
   Card,
 } from "antd";
 
-const SearchMap = () => {
+const SearchMap = (props) => {
+  const url = new URL(window.location.href);
+  // console.log(window.location.href = 'dau.net');
+  const item = url.searchParams.get("item");
+
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
 
   const [input, setInput] = useState(null);
-  const [page, setPage] = useState(1);
 
   console.log(input);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
+  const [current, setCurrent] = useState(1);
 
   const [marker, setMarker] = useState({
-    x: 127.188378,
-    y: 36.486509,
+    x: null,
+    y: null,
   });
 
   const [search, setSearch] = useState({
     type: "clickMap",
-    page: 1,
     radius: 10000,
   });
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `location/${page}/4/${marker.x}/${marker.y}/${search.radius}`
+        `location/${current}/4/${marker.x}/${marker.y}/${search.radius}`
       );
       setData(response.data.packet.items);
+      setLoading(false);
     } catch (e) {
       setError(e);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    console.log("marker", marker, search);
-    if (search.type === "clickMap") {
+    if (search.type === "clickMap" && marker.x && marker.y) {
+      console.log("marker", marker, search);
       fetchData();
     }
   }, [marker]);
@@ -78,12 +83,13 @@ const SearchMap = () => {
         .catch((e) => {
           console.log("local search error", e);
         });
+      console.log("fetch");
       fetchData();
     } else if (search.type === "keyword") {
       const fetchKeyword = async () => {
         try {
           const response = await axios.get(
-            `location/keyword/${page}/4/${input}`
+            `location/keyword/${current}/4/${input}`
           );
           setData(response.data.packet.items);
         } catch (e) {
@@ -92,18 +98,15 @@ const SearchMap = () => {
       };
       fetchKeyword();
     }
-    // eslint-disable-next-line
   }, [input]);
+
+  useEffect(() => {
+    fetchData();
+  }, [current]);
 
   if (loading) return <div>loading..</div>;
   if (error) return <div>error</div>;
   if (!data) return null;
-
-  function onChange(value) {
-    search.type = value;
-    console.log("onChange:", value);
-    console.log("onChange:", search);
-  }
 
   const onSearch = (value) => {
     console.log(value);
@@ -156,17 +159,20 @@ const SearchMap = () => {
 
             <SearchResult>
               <Row gutter={[12, 12]}>
-                {data.map((item) => {
+                {data.map((item, index) => {
                   if (!item.firstImageUrl) {
                     item.firstImageUrl = `https://bit.ly/3rYGoxK`;
                   }
                   return (
-                    <Col sm={24} xl={12}>
+                    <Col sm={24} xl={12} key={index}>
                       <Card
                         hoverable
                         key={item.contentId}
                         style={{ width: 300 }}
                         cover={<img alt="example" src={item.firstImageUrl} />}
+                        onClick={() => {
+                          props.history.push(`/search?item=${item.contentId}`);
+                        }}
                       >
                         <Meta
                           title={item.facltNm}
@@ -176,13 +182,21 @@ const SearchMap = () => {
                     </Col>
                   );
                 })}
-                <Pagination size="small" total={12} />
+                <Pagination
+                  size="small"
+                  total={12}
+                  pageSize={4}
+                  current={current}
+                  onChange={(e) => {
+                    setCurrent(Number(e));
+                  }}
+                />
               </Row>
             </SearchResult>
           </div>
         </Col>
         <Col sm={24} xl={14} className="gutter-row">
-          <Map marker={marker} setMarker={setMarker} />
+          <Map marker={marker} setMarker={setMarker} data={data} />
         </Col>
       </Row>
     </SearchContainer>

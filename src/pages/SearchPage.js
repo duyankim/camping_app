@@ -3,7 +3,7 @@ import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import SearchMap from "../components/Search";
 
-const SearchPage = () => {
+const SearchPage = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -13,7 +13,7 @@ const SearchPage = () => {
     <>
       <Sidebar isOpen={isOpen} toggle={toggle} />
       <Navbar toggle={toggle} />
-      <SearchMap />
+      <SearchMap {...props} />
     </>
   );
 };

@@ -7,33 +7,38 @@ const Map = (props) => {
     const container = document.getElementById("map");
     const options = {
       center: new kakao.maps.LatLng(36.486509, 127.188378),
-      level: 6,
+      level: 9,
     };
     const map = new kakao.maps.Map(container, options);
 
-    let points = [
-      new kakao.maps.LatLng(35.9829185, 127.3884379),
-      new kakao.maps.LatLng(33.452671, 126.574792),
-      new kakao.maps.LatLng(33.451744, 126.572441),
-    ];
+    // 마커를 표시할 위치와 title 객체 배열입니다
+    var positions = [];
+    props.data.map((item) => {
+      positions.push({
+        title: item.facltNm,
+        latlng: new kakao.maps.LatLng(item.position[1], item.position[0]),
+      });
+    });
+    console.log(positions);
 
-    // *지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다*
-    let bounds = new kakao.maps.LatLngBounds();
+    // 마커 이미지의 이미지 주소입니다
+    var imageSrc =
+      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
 
-    let i, marker;
-    for (i = 0; i < points.length; i++) {
-      // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
-      marker = new kakao.maps.Marker({ position: points[i] });
-      marker.setMap(map);
+    for (var i = 0; i < positions.length; i++) {
+      // 마커 이미지의 이미지 크기 입니다
+      var imageSize = new kakao.maps.Size(24, 35);
 
-      // LatLngBounds 객체에 좌표를 추가합니다
-      bounds.extend(points[i]);
-    }
+      // 마커 이미지를 생성합니다
+      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-    function setBounds() {
-      // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
-      // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-      map.setBounds(bounds);
+      // 마커를 생성합니다
+      var marker = new kakao.maps.Marker({
+        map: map, // 마커를 표시할 지도
+        position: positions[i].latlng, // 마커를 표시할 위치
+        title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+        image: markerImage, // 마커 이미지
+      });
     }
 
     // 지도에 클릭 이벤트를 등록합니다
@@ -42,8 +47,13 @@ const Map = (props) => {
       // 클릭한 위도, 경도 정보를 가져옵니다
       let latlng = mouseEvent.latLng;
 
+      var marker = new kakao.maps.Marker({
+        // 지도 중심좌표에 마커를 생성합니다
+        position: map.getCenter(),
+      });
       // 마커 위치를 클릭한 위치로 옮깁니다
       marker.setPosition(latlng);
+      marker.setMap(map);
 
       console.log(`click위도: ${latlng.getLat()}`);
       console.log(`click경도: ${latlng.getLng()}`);
@@ -51,15 +61,6 @@ const Map = (props) => {
         x: latlng.getLng(),
         y: latlng.getLat(),
       });
-    });
-
-    // *마우스 드래그로 지도 이동이 완료되었을 때 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다*
-    kakao.maps.event.addListener(map, "dragend", function () {
-      // 지도 중심좌표를 얻어옵니다
-      let latlng = map.getCenter();
-
-      console.log(`move위도: ${latlng.getLat()}`);
-      console.log(`move경도: ${latlng.getLng()}`);
     });
   }, []);
 

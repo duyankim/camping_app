@@ -5,20 +5,24 @@ import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import Info from "./components/Info";
 import "./App.css";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Navbar />
       <Switch>
         <Route path="/" component={Home} exact />
         <Route path="/about" component={Info} exact />
-        <Route path="/search" component={SearchPage} exact />
+        <Route
+          path="/search"
+          render={(props) => <SearchPage {...props} />}
+          exact
+        />
         <Route path="/register" component={RegisterPage} exact />
         <Route path="/login" component={LoginPage} exact />
       </Switch>
-    </Router>
+    </BrowserRouter>
   );
 }
 
