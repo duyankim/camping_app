@@ -28,8 +28,8 @@ const SearchMap = () => {
   const [data, setData] = useState(null);
 
   const [marker, setMarker] = useState({
-    x: 126.574792,
-    y: 33.452671,
+    x: 127.188378,
+    y: 36.486509,
   });
 
   const [search, setSearch] = useState({
@@ -70,7 +70,6 @@ const SearchMap = () => {
           },
         });
       }
-
       searchGeo(input)
         .then((res) => {
           console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
@@ -80,6 +79,18 @@ const SearchMap = () => {
           console.log("local search error", e);
         });
       fetchData();
+    } else if (search.type === "keyword") {
+      const fetchKeyword = async () => {
+        try {
+          const response = await axios.get(
+            `location/keyword/${page}/4/${input}`
+          );
+          setData(response.data.packet.items);
+        } catch (e) {
+          setError(e);
+        }
+      };
+      fetchKeyword();
     }
     // eslint-disable-next-line
   }, [input]);
@@ -128,8 +139,9 @@ const SearchMap = () => {
                   style={{ width: "30%" }}
                   value={search.type}
                 >
-                  <Option value="address">주소로 찾기</Option>
                   <Option value="clickMap">지도 위 클릭하기</Option>
+                  <Option value="address">주소로 찾기</Option>
+                  <Option value="keyword">캠핑장 이름으로 찾기</Option>
                 </Select>
 
                 <Search
