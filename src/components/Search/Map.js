@@ -48,8 +48,8 @@ const Map = (props) => {
       console.log(`click위도: ${latlng.getLat()}`);
       console.log(`click경도: ${latlng.getLng()}`);
       props.setMarker({
-        x: latlng.getLat(),
-        y: latlng.getLng(),
+        x: latlng.getLng(),
+        y: latlng.getLat(),
       });
     });
 
