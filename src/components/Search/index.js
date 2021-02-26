@@ -17,80 +17,70 @@ const SearchMap = () => {
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
-  const [input, setInput] = useState(null);
 
+  const [input, setInput] = useState(null);
   const [page, setPage] = useState(1);
-  const [mapX, setMapX] = useState(null);
-  const [mapY, setMapY] = useState(null);
 
   console.log(input);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
+
   const [marker, setMarker] = useState({
-    x: "",
-    y: "",
+    x: 126.574792,
+    y: 33.452671,
   });
+
   const [search, setSearch] = useState({
-    type: "address",
-    radius: 1000,
+    type: "clickMap",
+    page: 1,
+    radius: 10000,
   });
-
-  useEffect(() => {
-    console.log("marker", marker, search);
-    if (search.type === "nearby") {
-      const fetchData = async () => {
-        try {
-          const response = await axios.get(
-            `location/1/4/127.3884379/35.9829185/${search.radius}`
-          );
-          setData(response.data.packet.items);
-        } catch (e) {
-          setError(e);
-        }
-      };
-      fetchData();
-    }
-  }, [marker]);
-
-  // function searchGeo() {
-  //   return axios({
-  //     method: "GET",
-  //     url: "https://dapi.kakao.com/v2/local/search/address.json",
-  //     headers: { Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6` },
-  //     params: {
-  //       query: input,
-  //     },
-  //   });
-  // }
-  // searchGeo()
-  //   .then((res) => {
-  //     console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
-  //     setMapX(res.data.documents[0].x);
-  //     setMapY(res.data.documents[0].y);
-  //   })
-  //   .catch((e) => {
-  //     console.log("local search error", e);
-  //   });
 
   const fetchData = async () => {
     try {
-      setLoading(true);
-      setError(null);
-      setData(null);
       const response = await axios.get(
-        `location/1/4/127.3884379/35.9829185/${search.radius}`
+        `location/${page}/4/${marker.x}/${marker.y}/${search.radius}`
       );
       setData(response.data.packet.items);
     } catch (e) {
       setError(e);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
-    fetchData();
+    console.log("marker", marker, search);
+    if (search.type === "clickMap") {
+      fetchData();
+    }
+  }, [marker]);
+
+  useEffect(() => {
+    if (search.type === "address") {
+      function searchGeo() {
+        return axios({
+          method: "GET",
+          url: "https://dapi.kakao.com/v2/local/search/address.json",
+          headers: {
+            Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6`,
+          },
+          params: {
+            query: input,
+          },
+        });
+      }
+
+      searchGeo(input)
+        .then((res) => {
+          console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
+          setMarker({ x: res.data.documents[0].x, y: res.data.documents[0].y });
+        })
+        .catch((e) => {
+          console.log("local search error", e);
+        });
+      fetchData();
+    }
     // eslint-disable-next-line
   }, [input]);
 
@@ -104,10 +94,9 @@ const SearchMap = () => {
     console.log("onChange:", search);
   }
 
-  const onSearch = (value, e) => {
-    // console.log(value);
-    // e.preventDefault();
-    // setInput(value);
+  const onSearch = (value) => {
+    console.log(value);
+    setInput(value);
   };
 
   return (
@@ -118,7 +107,7 @@ const SearchMap = () => {
             <SearchFilter>
               <Input.Group compact>
                 <InputNumber
-                  defaultValue={1000}
+                  defaultValue={10000}
                   min={1}
                   max={20000}
                   formatter={(value) => `${value}m내`}
@@ -129,9 +118,9 @@ const SearchMap = () => {
                   }}
                   style={{ width: "20%" }}
                 />
+
                 <Select
                   defaultValue="주소"
-                  // onChange={onChange}
                   onChange={(value) => {
                     search.type = value;
                     setSearch({ ...search });
@@ -139,8 +128,8 @@ const SearchMap = () => {
                   style={{ width: "30%" }}
                   value={search.type}
                 >
-                  <Option value="address">주소</Option>
-                  <Option value="nearby">가까운 거리</Option>
+                  <Option value="address">주소로 찾기</Option>
+                  <Option value="clickMap">지도 위 클릭하기</Option>
                 </Select>
 
                 <Search
