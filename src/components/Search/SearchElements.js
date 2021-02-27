@@ -6,7 +6,7 @@ export const SearchContainer = styled.div`
 `;
 
 export const SearchFilter = styled.div`
-  padding: 65px 24px 20px 24px;
+  padding: 60px 24px 0px 24px;
 `;
 
 export const Form = styled.form`

@@ -29,6 +29,7 @@ const SearchMap = (props) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
+  const [placeArr, setPlaceArr] = useState([]);
   const [current, setCurrent] = useState(1);
 
   const [marker, setMarker] = useState({
@@ -46,7 +47,8 @@ const SearchMap = (props) => {
       const response = await axios.get(
         `location/${current}/4/${marker.x}/${marker.y}/${search.radius}`
       );
-      setData(response.data.packet.items);
+      setData(response.data.packet);
+      setPlaceArr(response.data.packet.items);
       setLoading(false);
     } catch (e) {
       setError(e);
@@ -91,7 +93,7 @@ const SearchMap = (props) => {
           const response = await axios.get(
             `location/keyword/${current}/4/${input}`
           );
-          setData(response.data.packet.items);
+          setData(response.data.packet);
         } catch (e) {
           setError(e);
         }
@@ -116,7 +118,7 @@ const SearchMap = (props) => {
   return (
     <SearchContainer>
       <Row gutter={{ xs: 8, sm: 16, md: 24, lg: 32 }} style={{ flex: `100%` }}>
-        <Col sm={24} xl={10} className="gutter-row">
+        <Col sm={24} xl={12} className="gutter-row">
           <div>
             <SearchFilter>
               <Input.Group compact>
@@ -155,11 +157,16 @@ const SearchMap = (props) => {
                 />
               </Input.Group>
             </SearchFilter>
-            <Divider orientation="left">검색결과</Divider>
+            <Divider
+              orientation="left"
+              style={{ paddingLeft: "24px", paddingRight: "24px" }}
+            >
+              검색결과 {data.totalCount}곳
+            </Divider>
 
             <SearchResult>
               <Row gutter={[12, 12]}>
-                {data.map((item, index) => {
+                {placeArr.map((item, index) => {
                   if (!item.firstImageUrl) {
                     item.firstImageUrl = `https://bit.ly/3rYGoxK`;
                   }
@@ -169,7 +176,9 @@ const SearchMap = (props) => {
                         hoverable
                         key={item.contentId}
                         style={{ width: 300 }}
-                        cover={<img alt="example" src={item.firstImageUrl} />}
+                        cover={
+                          <img alt="campingSite" src={item.firstImageUrl} />
+                        }
                         onClick={() => {
                           props.history.push(`/search?item=${item.contentId}`);
                         }}
@@ -184,7 +193,7 @@ const SearchMap = (props) => {
                 })}
                 <Pagination
                   size="small"
-                  total={12}
+                  total={data.totalCount}
                   pageSize={4}
                   current={current}
                   onChange={(e) => {
@@ -195,8 +204,8 @@ const SearchMap = (props) => {
             </SearchResult>
           </div>
         </Col>
-        <Col sm={24} xl={14} className="gutter-row">
-          <Map marker={marker} setMarker={setMarker} data={data} />
+        <Col sm={24} xl={12} className="gutter-row">
+          <Map marker={marker} setMarker={setMarker} data={placeArr} />
         </Col>
       </Row>
     </SearchContainer>

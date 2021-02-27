@@ -14,7 +14,7 @@ const Map = (props) => {
     // 마커를 표시할 위치와 title 객체 배열입니다
     var positions = [];
     props.data.map((item) => {
-      positions.push({
+      return positions.push({
         title: item.facltNm,
         latlng: new kakao.maps.LatLng(item.position[1], item.position[0]),
       });
