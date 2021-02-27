@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Map from "./Map";
+import { KAKAO_LOCAL } from "../../API_KEYS";
 import { SearchContainer, SearchFilter, SearchResult } from "./SearchElements";
 import {
   Divider,
@@ -15,17 +16,13 @@ import {
 
 const SearchMap = (props) => {
   const url = new URL(window.location.href);
-  // console.log(window.location.href = 'dau.net');
-  const item = url.searchParams.get("item");
+  const place = url.searchParams.get("place");
 
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
 
   const [input, setInput] = useState(null);
-
-  console.log(input);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState([]);
@@ -56,6 +53,19 @@ const SearchMap = (props) => {
     }
   };
 
+  function searchGeo(input) {
+    return axios({
+      method: "GET",
+      url: "https://dapi.kakao.com/v2/local/search/address.json",
+      headers: {
+        Authorization: KAKAO_LOCAL,
+      },
+      params: {
+        query: input,
+      },
+    });
+  }
+
   useEffect(() => {
     if (search.type === "clickMap" && marker.x && marker.y) {
       console.log("marker", marker, search);
@@ -65,18 +75,6 @@ const SearchMap = (props) => {
 
   useEffect(() => {
     if (search.type === "address") {
-      function searchGeo() {
-        return axios({
-          method: "GET",
-          url: "https://dapi.kakao.com/v2/local/search/address.json",
-          headers: {
-            Authorization: `KakaoAK fa78162d353e2096b3f7a6da0a6e0dd6`,
-          },
-          params: {
-            query: input,
-          },
-        });
-      }
       searchGeo(input)
         .then((res) => {
           console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
@@ -111,7 +109,7 @@ const SearchMap = (props) => {
   if (!data) return null;
 
   const onSearch = (value) => {
-    console.log(value);
+    console.log(`검색창에서 받았습니다 ${value}`);
     setInput(value);
   };
 
@@ -180,7 +178,7 @@ const SearchMap = (props) => {
                           <img alt="campingSite" src={item.firstImageUrl} />
                         }
                         onClick={() => {
-                          props.history.push(`/search?item=${item.contentId}`);
+                          props.history.push(`/search?place=${item.contentId}`);
                         }}
                       >
                         <Meta

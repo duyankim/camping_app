@@ -7,39 +7,9 @@ const Map = (props) => {
     const container = document.getElementById("map");
     const options = {
       center: new kakao.maps.LatLng(36.486509, 127.188378),
-      level: 9,
+      level: 6,
     };
     const map = new kakao.maps.Map(container, options);
-
-    // 마커를 표시할 위치와 title 객체 배열입니다
-    var positions = [];
-    props.data.map((item) => {
-      return positions.push({
-        title: item.facltNm,
-        latlng: new kakao.maps.LatLng(item.position[1], item.position[0]),
-      });
-    });
-    console.log(positions);
-
-    // 마커 이미지의 이미지 주소입니다
-    var imageSrc =
-      "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-
-    for (var i = 0; i < positions.length; i++) {
-      // 마커 이미지의 이미지 크기 입니다
-      var imageSize = new kakao.maps.Size(24, 35);
-
-      // 마커 이미지를 생성합니다
-      var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-      // 마커를 생성합니다
-      var marker = new kakao.maps.Marker({
-        map: map, // 마커를 표시할 지도
-        position: positions[i].latlng, // 마커를 표시할 위치
-        title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-        image: markerImage, // 마커 이미지
-      });
-    }
 
     // 지도에 클릭 이벤트를 등록합니다
     // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
@@ -62,6 +32,34 @@ const Map = (props) => {
         y: latlng.getLat(),
       });
     });
+
+    // 마커를 표시할 위치와 title 객체 배열입니다
+    var points = [];
+    props.data.map((item) => {
+      return points.push({
+        title: item.facltNm,
+        latlng: new kakao.maps.LatLng(item.position[1], item.position[0]),
+      });
+    });
+    console.log(`points: ${points}`);
+
+    var bounds = new kakao.maps.LatLngBounds();
+
+    var k, marker;
+    for (k = 0; k < points.length; k++) {
+      // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
+      marker = new kakao.maps.Marker({ position: points[k] });
+      marker.setMap(map);
+
+      // LatLngBounds 객체에 좌표를 추가합니다
+      bounds.extend(points[k]);
+    }
+
+    function setBounds() {
+      // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
+      // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
+      map.setBounds(bounds);
+    }
   }, []);
 
   return (
@@ -70,7 +68,7 @@ const Map = (props) => {
         id="map"
         style={{
           width: "100%",
-          height: "100vh",
+          height: "120vh",
         }}
       ></div>
     </>
