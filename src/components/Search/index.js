@@ -17,7 +17,7 @@ import {
 const SearchMap = (props) => {
   const url = new URL(window.location.href);
   const place = url.searchParams.get("place");
-
+  const numOfRows = 4
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
@@ -42,7 +42,7 @@ const SearchMap = (props) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `location/${current}/4/${marker.x}/${marker.y}/${search.radius}`
+        `location/${current}/${numOfRows}/${marker.x}/${marker.y}/${search.radius}`
       );
       setData(response.data.packet);
       setPlaceArr(response.data.packet.items);
@@ -82,12 +82,14 @@ const SearchMap = (props) => {
 
   useEffect(() => {
     if (search.type === "address") {
-      fetchData(searchGeo(input));
+      const getData = (fetchData) => {
+        searchGeo,
+      } 
     } else if (search.type === "keyword") {
       const fetchKeyword = async () => {
         try {
           const response = await axios.get(
-            `location/keyword/${current}/4/${input}`
+            `location/keyword/${current}/${numOfRows}/${input}`
           );
           setData(response.data.packet);
         } catch (e) {
