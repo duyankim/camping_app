@@ -3,14 +3,14 @@ const { kakao } = window;
 
 const Map = (props) => {
   console.log(props);
-  useEffect(() => {
-    const container = document.getElementById("map");
-    const options = {
-      center: new kakao.maps.LatLng(36.486509, 127.188378),
-      level: 6,
-    };
-    const map = new kakao.maps.Map(container, options);
+  const container = document.getElementById("map");
+  const options = {
+    center: new kakao.maps.LatLng(36.486509, 127.188378),
+    level: 6,
+  };
+  const map = new kakao.maps.Map(container, options);
 
+  useEffect(() => {
     // 지도에 클릭 이벤트를 등록합니다
     // 지도를 클릭하면 마지막 파라미터로 넘어온 함수를 호출합니다
     kakao.maps.event.addListener(map, "click", function (mouseEvent) {
@@ -68,11 +68,11 @@ const Map = (props) => {
         id="map"
         style={{
           width: "100%",
-          height: "120vh",
+          height: "110vh",
         }}
       ></div>
     </>
   );
 };
 
-export default Map;
+export default React.memo(Map);

@@ -53,8 +53,8 @@ const SearchMap = (props) => {
     }
   };
 
-  function searchGeo(input) {
-    return axios({
+  const searchGeo = async (input) => {
+    return await axios({
       method: "GET",
       url: "https://dapi.kakao.com/v2/local/search/address.json",
       headers: {
@@ -63,8 +63,15 @@ const SearchMap = (props) => {
       params: {
         query: input,
       },
-    });
-  }
+    })
+      .then((res) => {
+        console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
+        setMarker({ x: res.data.documents[0].x, y: res.data.documents[0].y });
+      })
+      .catch((e) => {
+        console.log("local search error", e);
+      });
+  };
 
   useEffect(() => {
     if (search.type === "clickMap" && marker.x && marker.y) {
@@ -75,16 +82,7 @@ const SearchMap = (props) => {
 
   useEffect(() => {
     if (search.type === "address") {
-      searchGeo(input)
-        .then((res) => {
-          console.log(`${res.data.documents[0].x}/${res.data.documents[0].y}`);
-          setMarker({ x: res.data.documents[0].x, y: res.data.documents[0].y });
-        })
-        .catch((e) => {
-          console.log("local search error", e);
-        });
-      console.log("fetch");
-      fetchData();
+      fetchData(searchGeo(input));
     } else if (search.type === "keyword") {
       const fetchKeyword = async () => {
         try {
@@ -210,4 +208,4 @@ const SearchMap = (props) => {
   );
 };
 
-export default SearchMap;
+export default React.memo(SearchMap);
