@@ -4,6 +4,7 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import Navbar from "./components/Navbar";
 import Info from "./components/Info";
+import DetailPage from "./pages/DetailPage";
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 
