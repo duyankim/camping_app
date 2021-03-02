@@ -3,21 +3,12 @@ import axios from "axios";
 import Map from "./Map";
 import { KAKAO_LOCAL } from "../../API_KEYS";
 import { SearchContainer, SearchFilter, SearchResult } from "./SearchElements";
-import {
-  Divider,
-  Input,
-  InputNumber,
-  Select,
-  Row,
-  Col,
-  Pagination,
-  Card,
-} from "antd";
+import { Divider, Input, Select, Row, Col, Pagination, Card } from "antd";
 
 const SearchMap = (props) => {
   const url = new URL(window.location.href);
   const place = url.searchParams.get("place");
-  const numOfRows = 4
+  const numOfRows = 4;
   const { Search } = Input;
   const { Option } = Select;
   const { Meta } = Card;
@@ -36,7 +27,7 @@ const SearchMap = (props) => {
 
   const [search, setSearch] = useState({
     type: "clickMap",
-    radius: 10000,
+    radius: "20000",
   });
 
   const fetchData = async () => {
@@ -82,9 +73,8 @@ const SearchMap = (props) => {
 
   useEffect(() => {
     if (search.type === "address") {
-      const getData = (fetchData) => {
-        searchGeo,
-      } 
+      searchGeo(input);
+      fetchData();
     } else if (search.type === "keyword") {
       const fetchKeyword = async () => {
         try {
@@ -120,19 +110,20 @@ const SearchMap = (props) => {
           <div>
             <SearchFilter>
               <Input.Group compact>
-                <InputNumber
-                  defaultValue={10000}
-                  min={1}
-                  max={20000}
-                  formatter={(value) => `${value}m내`}
-                  parser={(value) => value.replace("m내", "")}
+                <Select
+                  defaultValue="20000"
                   onChange={(value) => {
                     search.radius = value;
                     setSearch({ ...search });
                   }}
                   style={{ width: "20%" }}
-                />
-
+                  value={search.radius}
+                >
+                  <Option value="5000">5km</Option>
+                  <Option value="10000">10km</Option>
+                  <Option value="15000">15km</Option>
+                  <Option value="20000">20km</Option>
+                </Select>
                 <Select
                   defaultValue="주소"
                   onChange={(value) => {
