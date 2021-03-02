@@ -29,7 +29,7 @@ const Header = () => {
         <HeaderP>가까운 캠핑장을 지도에서 찾아보세요.</HeaderP>
         <HeaderBtnWrapper>
           <Button
-            to="searchMap"
+            to="/search"
             onMouseEnter={onHover}
             onMouseLeave={onHover}
             primary="true"
