@@ -42,7 +42,7 @@ const Info = ({
                 <Subtitle darkText={darkText}>{description}</Subtitle>
                 <BtnWrap>
                   <Button
-                    to="/signin"
+                    to="/login"
                     smooth={true}
                     duration={500}
                     spy={true}
