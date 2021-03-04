@@ -8,7 +8,7 @@ export const homeObjOne = {
   description: "테마별 캠핑장, 나만 알고 싶은 차박 장소를 저장할 수 있어요.",
   buttonLabel: "지금 로그인하기",
   imgStart: false,
-  img: "https://bit.ly/3aCJMqZ",
+  img: "https://bit.ly/380OxKv",
   alt: "camping car",
   primary: true,
   darkText: false,

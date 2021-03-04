@@ -125,7 +125,7 @@ const SearchMap = (props) => {
                   <Option value="20000">20km</Option>
                 </Select>
                 <Select
-                  defaultValue="주소"
+                  defaultValue="clickMap"
                   onChange={(value) => {
                     search.type = value;
                     setSearch({ ...search });
